@@ -1,4 +1,4 @@
-package lessons.services;
+package lessons.services.interfaces;
 
 /**
  * Created by max on 02.09.16.
