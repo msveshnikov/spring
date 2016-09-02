@@ -1,6 +1,7 @@
 package lessons.starter;
 
 import lessons.LessonsConfiguration;
+import lessons.services.GreetingService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -16,5 +17,8 @@ public class Starter {
         logger.info("Starting configuration...");
 
         ApplicationContext context = new AnnotationConfigApplicationContext(LessonsConfiguration.class);
+        GreetingService greetingService = (GreetingService) context.getBean("greetingService");
+        logger.info(greetingService.sayGreeting());  // "Greeting, user!"
+        logger.info("App finishing");
     }
 }
