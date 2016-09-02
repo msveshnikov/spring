@@ -1,6 +1,7 @@
 package lessons.starter;
 
 import lessons.LessonsConfiguration;
+import lessons.services.BeanWithDependency;
 import lessons.services.interfaces.GreetingService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -23,6 +24,10 @@ public class Starter {
         logger.info(greetingService.sayGreeting());  // "Greeting, user!"
         GreetingService greetingService2 = (GreetingService) context.getBean("greetingService");
         logger.info(greetingService2.sayGreeting());  // "Greeting, user!"
+
+        BeanWithDependency withDependency = context.getBean(BeanWithDependency.class);
+        logger.info(withDependency.printText());
+
         logger.info("App finishing");
     }
 }

@@ -1,4 +1,4 @@
-package lessons.services;
+package lessons.services.implementation;
 
 import lessons.services.interfaces.Calculator;
 import lessons.services.interfaces.GreetingService;
@@ -33,6 +33,7 @@ public class GreetingServiceImpl implements GreetingService {
         this.context = context;
     }
 
+    @Required
     @Autowired
     public void setCalculator(Calculator calculator) {
         this.calculator = calculator;
@@ -50,7 +51,7 @@ public class GreetingServiceImpl implements GreetingService {
 
     @Override
     public String sayGreeting() {
-        logger.info("Calculate 2+2" + calculator.add(2, 2));
+        logger.info("Calculate 2+2=" + calculator.add(2, 2));
         return "Greeting, user!";
     }
 }
