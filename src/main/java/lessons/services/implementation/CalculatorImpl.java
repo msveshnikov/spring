@@ -1,9 +1,11 @@
 package lessons.services.implementation;
 
 import lessons.services.interfaces.Calculator;
+import lessons.services.interfaces.GreetingService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,13 +16,19 @@ import javax.annotation.PreDestroy;
  */
 
 @Component("calculator")
-@Scope("prototype")
+//@Scope("prototype")
 public class CalculatorImpl implements Calculator {
     private static final Logger logger = LogManager.getLogger(CalculatorImpl.class);
+    private GreetingService gr;
 
     @Override
     public int add(int a, int b) {
         return a + b;
+    }
+
+    @Override
+    public int mul(int x, int y) {
+        return x * y;
     }
 
     @PostConstruct
@@ -33,4 +41,9 @@ public class CalculatorImpl implements Calculator {
         logger.info("preDestroy");
     }
 
+    @Required
+    @Autowired
+    public void setGreetingService(GreetingService gr) {
+        this.gr = gr;
+    }
 }

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +18,7 @@ import javax.annotation.PreDestroy;
  */
 
 @Component("greetingService")
-//@Scope("prototype")
+@Scope("singleton")
 public class GreetingServiceImpl implements GreetingService {
     private static final Logger logger = LogManager.getLogger(GreetingServiceImpl.class);
     private ApplicationContext context;

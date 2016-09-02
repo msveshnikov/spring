@@ -5,4 +5,6 @@ package lessons.services.interfaces;
  */
 public interface Calculator {
     int add(int a, int b);
+
+    int mul(int x, int y);
 }
