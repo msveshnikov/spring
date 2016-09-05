@@ -1,24 +1,23 @@
-package lessons.starter;
+package batch;
 
 import lessons.LessonsConfiguration;
 import lessons.services.BeanWithDependency;
 import lessons.services.interfaces.GreetingService;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
 
-/**
- * Created by max on 02.09.16.
- */
-public class Starter {
-    private static final Logger logger = LogManager.getLogger(Starter.class);
+@SpringBootApplication
+public class Application {
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) {
-        logger.info("Starting configuration...");
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(Application.class, args);
 
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
-        //context.getEnvironment().setActiveProfiles("production");
         context.register(LessonsConfiguration.class);
         context.refresh();
 
@@ -27,19 +26,16 @@ public class Starter {
         boolean containsFoo = env.containsProperty("foo");
         System.out.println("Does my environment contain the 'foo' property? " + containsFoo);
 
+        boolean containsDbUrl = env.containsProperty("db.url");
+        System.out.println("Does my environment contain the 'db.url' property? " + containsDbUrl);
+
         GreetingService greetingService = (GreetingService) context.getBean("greetingService");
         logger.info(greetingService.sayGreeting());  // "Greeting, user!"
         GreetingService greetingService2 = (GreetingService) context.getBean("greetingService");
         logger.info(greetingService2.sayGreeting());  // "Greeting, user!"
 
         BeanWithDependency withDependency = context.getBean(BeanWithDependency.class);
-        logger.info(withDependency.printText());
+        logger.info(withDependency.printText().toString());
 
-//        java.lang.Object auto=context.getBean("auto");
-
-//        System.exit(SpringApplication.exit(SpringApplication.run(
-//                BatchConfiguration.class, args)));
-
-        logger.info("App finishing");
     }
 }
