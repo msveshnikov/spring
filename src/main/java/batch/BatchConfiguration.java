@@ -56,14 +56,13 @@ public class BatchConfiguration {
                 .build();
     }
 
-    // tag::readerwriterprocessor[]
     @Bean
     public FlatFileItemReader<Person> reader() {
         FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
         reader.setResource(new ClassPathResource("contacts.csv"));
         reader.setLineMapper(new DefaultLineMapper<Person>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
-                setNames(new String[]{"Primary_Key", "State", "Gov_Name", "Type", "title", "firstName", "phone"
+                setNames(new String[]{"1", "2", "3", "4", "title", "firstName", "phone"
                         , "f1", "f2", "f3", "f4", "f5", "f6", "f7"
                 });
             }});
@@ -89,18 +88,12 @@ public class BatchConfiguration {
         writer.setDataSource(dataSource());
         return writer;
     }
-    // end::readerwriterprocessor[]
-
-    // tag::listener[]
 
     @Bean
     public JobExecutionListener listener() {
         return new JobCompletionNotificationListener(new JdbcTemplate(dataSource()));
     }
 
-    // end::listener[]
-
-    // tag::jobstep[]
     @Bean
     public Job importUserJob() {
         return jobBuilderFactory.get("importUserJob")
@@ -120,5 +113,5 @@ public class BatchConfiguration {
                 .writer(writer())
                 .build();
     }
-    // end::jobstep[]
+
 }

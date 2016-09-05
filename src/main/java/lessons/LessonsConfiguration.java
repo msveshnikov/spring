@@ -31,7 +31,7 @@ public class LessonsConfiguration {
     @Bean
     public TestBean testBean() {
         TestBean testBean = new TestBean();
-//        testBean.setName(env.getProperty("testbean.name"));
+        testBean.setName(env.getProperty("testbean.name"));
         return testBean;
     }
 
