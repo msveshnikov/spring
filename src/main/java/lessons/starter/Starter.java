@@ -37,6 +37,9 @@ public class Starter {
 
 //        java.lang.Object auto=context.getBean("auto");
 
+//        System.exit(SpringApplication.exit(SpringApplication.run(
+//                BatchConfiguration.class, args)));
+
         logger.info("App finishing");
     }
 }
