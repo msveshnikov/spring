@@ -43,7 +43,7 @@ public class BatchConfiguration {
     @Autowired
     public StepBuilderFactory stepBuilderFactory;
 
-    @Resource
+    @Resource // not an @AutoWired because of order of wiring
     public Environment env;
 
     @Bean
@@ -62,13 +62,13 @@ public class BatchConfiguration {
         reader.setResource(new ClassPathResource("contacts.csv"));
         reader.setLineMapper(new DefaultLineMapper<Person>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
-                setNames(new String[]{"1", "2", "3", "4", "title", "firstName", "phone"
+                setNames(new String[]{"1", "state", "county", "4", "title", "firstName", "phone"
                         , "f1", "f2", "f3", "f4", "f5", "f6", "f7"
                 });
             }});
             setFieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
-                setStrict(false);
-                setDistanceLimit(1);
+                setStrict(false); // as column quantity misequal
+                setDistanceLimit(1); // to fix bug with NonWriteable property
                 setTargetType(Person.class);
             }});
         }});
@@ -84,7 +84,7 @@ public class BatchConfiguration {
     public JdbcBatchItemWriter<Person> writer() {
         JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
-        writer.setSql("INSERT INTO people (title, firstname, phone) VALUES (:title, :firstName, :phone);");
+        writer.setSql("INSERT INTO people (title, firstname, phone, state, county) VALUES (:title, :firstName, :phone, :state, :county);");
         writer.setDataSource(dataSource());
         return writer;
     }

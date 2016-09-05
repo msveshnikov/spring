@@ -18,13 +18,6 @@ import javax.sql.DataSource;
 @PropertySource("classpath:app.properties")
 public class LessonsConfiguration {
 
-//    @Bean
-//    @Scope("prototype")
-//    @Description("Текстовое описание бина greetingService")
-//    GreetingService greetingService() {
-//        return new GreetingServiceImpl();
-//    }
-
     @Autowired
     Environment env;
 

@@ -28,7 +28,7 @@ public class PersonItemProcessor implements ItemProcessor<Person, Person> {
             phone = person.getPhone();
         }
 
-        final Person transformedPerson = new Person(name, title, phone);
+        final Person transformedPerson = new Person(name, title, phone, person.getState(), person.getCounty());
 
         log.info("Converting (" + person + ") into (" + transformedPerson + ")");
 

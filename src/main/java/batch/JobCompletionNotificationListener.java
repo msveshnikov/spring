@@ -7,10 +7,7 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
@@ -29,12 +26,8 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
             log.info("!!! JOB FINISHED! Time to verify the results");
 
-            List<Person> results = jdbcTemplate.query("SELECT FIRSTname, title, phone FROM people", new RowMapper<Person>() {
-                @Override
-                public Person mapRow(ResultSet rs, int row) throws SQLException {
-                    return new Person(rs.getString(1), rs.getString(2), rs.getString(3));
-                }
-            });
+            List<Person> results = jdbcTemplate.query("SELECT FIRSTname, title, phone FROM people", (rs, row)
+                    -> new Person(rs.getString(1), rs.getString(2), rs.getString(3), "", ""));
 
             for (Person person : results) {
                 log.info("Found <" + person + "> in the database.");
