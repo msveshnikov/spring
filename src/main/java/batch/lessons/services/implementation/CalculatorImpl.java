@@ -1,7 +1,7 @@
-package lessons.services.implementation;
+package batch.lessons.services.implementation;
 
-import lessons.services.interfaces.Calculator;
-import lessons.services.interfaces.GreetingService;
+import batch.lessons.services.interfaces.Calculator;
+import batch.lessons.services.interfaces.GreetingService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

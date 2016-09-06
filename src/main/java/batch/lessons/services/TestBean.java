@@ -1,4 +1,4 @@
-package lessons.services;
+package batch.lessons.services;
 
 /**
  * Created by max on 02.09.16.

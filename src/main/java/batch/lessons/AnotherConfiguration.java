@@ -1,8 +1,8 @@
-package lessons;
+package batch.lessons;
 
-import lessons.services.BeanWithDependency;
-import lessons.services.interfaces.Calculator;
-import lessons.services.interfaces.GreetingService;
+import batch.lessons.services.BeanWithDependency;
+import batch.lessons.services.interfaces.Calculator;
+import batch.lessons.services.interfaces.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

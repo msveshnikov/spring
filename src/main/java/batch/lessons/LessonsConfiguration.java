@@ -1,6 +1,6 @@
-package lessons;
+package batch.lessons;
 
-import lessons.services.TestBean;
+import batch.lessons.services.TestBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;

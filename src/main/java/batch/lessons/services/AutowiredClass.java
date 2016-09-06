@@ -1,6 +1,6 @@
-package lessons.services;
+package batch.lessons.services;
 
-import lessons.services.interfaces.GreetingService;
+import batch.lessons.services.interfaces.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 

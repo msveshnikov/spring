@@ -1,7 +1,7 @@
-package lessons.services;
+package batch.lessons.services;
 
-import lessons.services.interfaces.Calculator;
-import lessons.services.interfaces.GreetingService;
+import batch.lessons.services.interfaces.Calculator;
+import batch.lessons.services.interfaces.GreetingService;
 
 /**
  * Created by max on 02.09.16.

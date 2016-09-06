@@ -4,6 +4,9 @@ package batch;
  * Created by Max Sveshnikov on 05.09.16.
  */
 
+import batch.lessons.services.JobCompletionNotificationListener;
+import batch.lessons.services.PersonItemProcessor;
+import batch.model.Person;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;

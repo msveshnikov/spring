@@ -1,4 +1,4 @@
-package batch;
+package batch.model;
 
 /**
  * Created by Max Sveshnikov on 05.09.16.
