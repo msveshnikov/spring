@@ -29,6 +29,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -38,6 +39,7 @@ import javax.sql.DataSource;
 @EnableBatchProcessing
 @ComponentScan
 @PropertySource("classpath:app.properties")
+@EnableScheduling
 public class BatchConfiguration {
 
     @Autowired
