@@ -3,14 +3,10 @@ package batch;
 import batch.lessons.LessonsConfiguration;
 import batch.lessons.services.BeanWithDependency;
 import batch.lessons.services.interfaces.GreetingService;
-import batch.model.Customer;
-import batch.model.CustomerRepository;
-import batch.model.Order;
-import batch.model.OrderRepository;
+import batch.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -26,6 +22,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Date;
 
+import static java.lang.Thread.sleep;
+
 @SpringBootApplication
 public class Application implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -36,14 +34,18 @@ public class Application implements CommandLineRunner {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
+    private PersonRepository personRepository;
+    @Autowired
     private Job importUserJob;
 
     public static void main(String[] args) throws Exception {
+        SpringApplication.run(Application.class, args);
+    }
 
+    private void testBeans() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.register(LessonsConfiguration.class);
         context.refresh();
-
 
         context.registerShutdownHook();
         Environment env = context.getEnvironment();
@@ -60,21 +62,30 @@ public class Application implements CommandLineRunner {
 
         BeanWithDependency withDependency = context.getBean(BeanWithDependency.class);
         logger.info(withDependency.printText().toString());
-
-        SpringApplication.run(Application.class, args);
-
     }
 
     @Scheduled(fixedRate = 5000)
-    public void reportCurrentTime() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+    public void reportCurrentTime() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, InterruptedException {
         logger.info("The time is now {}", new Date());
+        sleep(5000); // conflict with default job run - sqlite is locked
         System.out.println("Starting job");
-        jobLauncher.run(importUserJob, new JobParameters());
+//        jobLauncher.run(importUserJob, new JobParametersBuilder()
+//                .addLong("time", System.currentTimeMillis()).toJobParameters()); //need new JobParams to start each step again
     }
 
     @Override
     public void run(String... args) throws Exception {
+        //testBeans();
+        //testMongo();
+        testSQL();
+    }
 
+    private void testSQL() {
+        personRepository.save(new Person("Me", "programmer", "333", "", ""));
+        personRepository.deleteAll();
+    }
+
+    private void testMongo() {
         customerRepository.deleteAll();
 
         // save a couple of customers

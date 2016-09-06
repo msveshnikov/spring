@@ -21,7 +21,6 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -51,19 +50,22 @@ public class BatchConfiguration {
     @Resource // not an @AutoWired because of order of wiring
     public Environment env;
 
-    @Bean
-    public DataSource dataSource() {
-        return DataSourceBuilder.create()
-                .url(env.getProperty("db.url"))
-                .driverClassName(env.getProperty("db.driver"))
-                .username(env.getProperty("db.username"))
-                .password(env.getProperty("db.password"))
-                .build();
-    }
+    @Autowired
+    public DataSource dataSource; // set from app.properties
+//    @Bean
+//    public DataSource dataSource() {
+//        return DataSourceBuilder.create()
+//                .url(env.getProperty("db.url"))
+//                .driverClassName(env.getProperty("db.driver"))
+//                .username(env.getProperty("db.username"))
+//                .password(env.getProperty("db.password"))
+//                .build();
+//    }
 
     @Bean
     public FlatFileItemReader<Person> reader() {
         FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
+        reader.setMaxItemCount(20);
         reader.setResource(new ClassPathResource("contacts.csv"));
         reader.setLineMapper(new DefaultLineMapper<Person>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
@@ -90,13 +92,13 @@ public class BatchConfiguration {
         JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
         writer.setSql("INSERT INTO people (title, firstname, phone, state, county) VALUES (:title, :firstName, :phone, :state, :county);");
-        writer.setDataSource(dataSource());
+        writer.setDataSource(dataSource);
         return writer;
     }
 
     @Bean
     public JobExecutionListener listener() {
-        return new JobCompletionNotificationListener(new JdbcTemplate(dataSource()));
+        return new JobCompletionNotificationListener(new JdbcTemplate(dataSource));
     }
 
     @Bean
@@ -116,6 +118,7 @@ public class BatchConfiguration {
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
+
                 .build();
     }
 

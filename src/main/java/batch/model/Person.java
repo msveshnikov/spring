@@ -1,9 +1,18 @@
 package batch.model;
 
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * Created by Max Sveshnikov on 05.09.16.
  */
+@Entity
 public class Person {
+    @Id
+    @GeneratedValue
+    private long id;
 
     private String firstName;
     private String title;
@@ -21,6 +30,14 @@ public class Person {
         this.phone = phone;
         this.state = state;
         this.county = county;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getState() {
