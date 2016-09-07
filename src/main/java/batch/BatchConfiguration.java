@@ -89,7 +89,7 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public JdbcBatchItemWriter<Person> writer() {
+    public JdbcBatchItemWriter<Person> mysqlWriter() {
         JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
         writer.setSql("INSERT INTO people (title, firstname, phone, state, county) VALUES (:title, :firstName, :phone, :state, :county);");
@@ -125,10 +125,9 @@ public class BatchConfiguration {
     }
 
 
-    private CompositeItemWriter<Person> compositeItemWriter() {
+    private CompositeItemWriter compositeItemWriter() {
         CompositeItemWriter writer = new CompositeItemWriter();
-        writer.setDelegates(Arrays.asList(writer(), mongoWriter()
-        ));
+        writer.setDelegates(Arrays.asList(mysqlWriter(), mongoWriter()));
         return writer;
     }
 

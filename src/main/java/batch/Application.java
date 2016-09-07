@@ -4,8 +4,6 @@ import batch.lessons.LessonsConfiguration;
 import batch.lessons.services.BeanWithDependency;
 import batch.lessons.services.interfaces.GreetingService;
 import batch.model.*;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -19,13 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Date;
 
 import static java.lang.Thread.sleep;
@@ -46,7 +43,16 @@ public class Application implements CommandLineRunner {
 
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(Application.class, args);
+
+
+        ApplicationContext ctx = SpringApplication.run(Application.class, args);
+        String[] beanNames = ctx.getBeanDefinitionNames();
+        Arrays.sort(beanNames);
+        System.out.println("Let's inspect the beans provided by Spring Boot:");
+        for (String beanName : beanNames) {
+            System.out.println(beanName);
+        }
+
     }
 
     private void testBeans() {

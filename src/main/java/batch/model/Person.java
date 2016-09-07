@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class Person {
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
 
     private String firstName;
     private String title;
