@@ -1,18 +1,20 @@
 package batch.model;
 
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
  * Created by Max Sveshnikov on 05.09.16.
  */
 @Entity
+@Document //for Mongo
 public class Person {
     @Id
-    @GeneratedValue
-    private long id;
+    //@GeneratedValue
+    private String id;
 
     private String firstName;
     private String title;
@@ -32,13 +34,6 @@ public class Person {
         this.county = county;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getState() {
         return state;

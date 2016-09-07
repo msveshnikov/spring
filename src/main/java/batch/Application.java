@@ -75,9 +75,9 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //testBeans();
-        //testMongo();
-        testSQL();
+        testBeans();
+        testMongo();
+        //testSQL();
     }
 
     private void testSQL() {

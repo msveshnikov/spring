@@ -7,6 +7,7 @@ package batch;
 import batch.lessons.services.JobCompletionNotificationListener;
 import batch.lessons.services.PersonItemProcessor;
 import batch.model.Person;
+import batch.model.PersonMongoRepository;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -14,12 +15,14 @@ import org.springframework.batch.core.configuration.annotation.EnableBatchProces
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,6 +35,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -52,15 +57,10 @@ public class BatchConfiguration {
 
     @Autowired
     public DataSource dataSource; // set from app.properties
-//    @Bean
-//    public DataSource dataSource() {
-//        return DataSourceBuilder.create()
-//                .url(env.getProperty("db.url"))
-//                .driverClassName(env.getProperty("db.driver"))
-//                .username(env.getProperty("db.username"))
-//                .password(env.getProperty("db.password"))
-//                .build();
-//    }
+
+
+    @Autowired
+    private PersonMongoRepository personMongoRepository;
 
     @Bean
     public FlatFileItemReader<Person> reader() {
@@ -97,6 +97,18 @@ public class BatchConfiguration {
     }
 
     @Bean
+    public ItemWriter<Person> mongoWriter() {
+        return new ItemWriter<Person>() {
+            @Override
+            public void write(List<? extends Person> list) throws Exception {
+                for (Person p : list) {
+                    personMongoRepository.save(p);
+                }
+            }
+        };
+    }
+
+    @Bean
     public JobExecutionListener listener() {
         return new JobCompletionNotificationListener(new JdbcTemplate(dataSource));
     }
@@ -111,14 +123,20 @@ public class BatchConfiguration {
                 .build();
     }
 
+
+    private CompositeItemWriter<Person> compositeItemWriter() {
+        CompositeItemWriter writer = new CompositeItemWriter();
+        writer.setDelegates(Arrays.asList(writer(), mongoWriter()));
+        return writer;
+    }
+
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
                 .<Person, Person>chunk(500)
                 .reader(reader())
                 .processor(processor())
-                .writer(writer())
-
+                .writer(compositeItemWriter())
                 .build();
     }
 
