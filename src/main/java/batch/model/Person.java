@@ -1,14 +1,15 @@
 package batch.model;
-
+/**
+ * Created by Max Sveshnikov on 05.09.16.
+ */
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-/**
- * Created by Max Sveshnikov on 05.09.16.
- */
+
 @Entity
 @Document //for Mongo
 public class Person {

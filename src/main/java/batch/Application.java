@@ -4,9 +4,12 @@ import batch.lessons.LessonsConfiguration;
 import batch.lessons.services.BeanWithDependency;
 import batch.lessons.services.interfaces.GreetingService;
 import batch.model.*;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -18,8 +21,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBuilder;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 import static java.lang.Thread.sleep;
@@ -37,6 +43,7 @@ public class Application implements CommandLineRunner {
     private PersonRepository personRepository;
     @Autowired
     private Job importUserJob;
+
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
@@ -69,20 +76,26 @@ public class Application implements CommandLineRunner {
         logger.info("The time is now {}", new Date());
         sleep(5000); // conflict with default job run - sqlite is locked
         System.out.println("Starting job");
-//        jobLauncher.run(importUserJob, new JobParametersBuilder()
-//                .addLong("time", System.currentTimeMillis()).toJobParameters()); //need new JobParams to start each step again
+        jobLauncher.run(importUserJob, new JobParametersBuilder()
+                .addLong("time", System.currentTimeMillis()).toJobParameters()); //need new JobParams to start each step again
     }
 
     @Override
     public void run(String... args) throws Exception {
         testBeans();
         testMongo();
-        //testSQL();
+        testSQL();
     }
 
     private void testSQL() {
-        personRepository.save(new Person("Me", "programmer", "333", "", ""));
         personRepository.deleteAll();
+        personRepository.save(new Person("Me", "programmer", "333", "", ""));
+        personRepository.save(new Person("Other", "QA", "333", "", ""));
+        logger.info("Persons found with findAll():");
+        logger.info("-------------------------------");
+        for (Person person : personRepository.findAll()) {
+            logger.info(person.toString());
+        }
     }
 
     private void testMongo() {

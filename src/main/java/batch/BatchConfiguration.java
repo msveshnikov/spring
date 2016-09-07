@@ -8,6 +8,7 @@ import batch.lessons.services.JobCompletionNotificationListener;
 import batch.lessons.services.PersonItemProcessor;
 import batch.model.Person;
 import batch.model.PersonMongoRepository;
+import org.hibernate.SessionFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;

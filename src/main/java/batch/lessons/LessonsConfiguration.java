@@ -28,10 +28,4 @@ public class LessonsConfiguration {
         return testBean;
     }
 
-    @Bean
-    @Profile("production")
-    public DataSource dataSource() throws Exception {
-        Context ctx = new InitialContext();
-        return (DataSource) ctx.lookup("java:comp/env/jdbc/datasource");
-    }
 }
