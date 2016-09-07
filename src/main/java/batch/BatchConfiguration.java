@@ -6,9 +6,9 @@ package batch;
 
 import batch.lessons.services.JobCompletionNotificationListener;
 import batch.lessons.services.PersonItemProcessor;
+import batch.model.Customer;
+import batch.model.CustomerRepository;
 import batch.model.Person;
-import batch.model.PersonMongoRepository;
-import org.hibernate.SessionFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
@@ -59,9 +59,9 @@ public class BatchConfiguration {
     @Autowired
     public DataSource dataSource; // set from app.properties
 
-
     @Autowired
-    private PersonMongoRepository personMongoRepository;
+    private CustomerRepository customerRepository;
+
 
     @Bean
     public FlatFileItemReader<Person> reader() {
@@ -103,7 +103,7 @@ public class BatchConfiguration {
             @Override
             public void write(List<? extends Person> list) throws Exception {
                 for (Person p : list) {
-                    personMongoRepository.save(p);
+                    customerRepository.save(new Customer(p.getFirstName(), p.getTitle()));
                 }
             }
         };
@@ -127,7 +127,8 @@ public class BatchConfiguration {
 
     private CompositeItemWriter<Person> compositeItemWriter() {
         CompositeItemWriter writer = new CompositeItemWriter();
-        writer.setDelegates(Arrays.asList(writer(), mongoWriter()));
+        writer.setDelegates(Arrays.asList(writer(), mongoWriter()
+        ));
         return writer;
     }
 

@@ -3,19 +3,17 @@ package batch.model;
  * Created by Max Sveshnikov on 05.09.16.
  */
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 
 @Entity
-@Document //for Mongo
+//@Document //for Mongo
 public class Person {
     @Id
-    //@GeneratedValue
-    private String id;
+    @GeneratedValue
+    private int id;
 
     private String firstName;
     private String title;
