@@ -3,11 +3,14 @@ package batch;
 import batch.lessons.LessonsConfiguration;
 import batch.lessons.services.BeanWithDependency;
 import batch.lessons.services.interfaces.GreetingService;
-import batch.model.*;
-import batch.repos.*;
+import batch.model.Customer;
+import batch.model.Order;
+import batch.model.Person;
+import batch.repos.CustomerRepository;
+import batch.repos.OrderRepository;
+import batch.repos.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -19,9 +22,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -39,12 +40,16 @@ public class Application implements CommandLineRunner {
     private CustomerRepository customerRepository;
     @Autowired
     private PersonRepository personRepository;
-    @Autowired
-    private Job importUserJob;
+//    @Autowired
+//    private Job importUserJob;
 
 
     public static void main(String[] args) throws Exception {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
+        //printBeans(ctx);
+    }
+
+    private static void printBeans(ApplicationContext ctx) {
         String[] beanNames = ctx.getBeanDefinitionNames();
         Arrays.sort(beanNames);
         System.out.println("Let's inspect the beans provided by Spring Boot:");
@@ -53,21 +58,21 @@ public class Application implements CommandLineRunner {
         }
     }
 
-    @Bean
-    CommandLineRunner init(AccountRepository accountRepository,
-                           BookmarkRepository bookmarkRepository) {
-        return evt -> Arrays.asList(
-                "jhoeller,dsyer,pwebb,ogierke,rwinch,mfisher,mpollack,jlong".split(","))
-                .forEach(
-                        a -> {
-                            Account account = accountRepository.save(new Account(a,
-                                    "password"));
-                            bookmarkRepository.save(new Bookmark(account,
-                                    "http://bookmark.com/1/" + a, "A description"));
-                            bookmarkRepository.save(new Bookmark(account,
-                                    "http://bookmark.com/2/" + a, "A description"));
-                        });
-    }
+//    @Bean
+//    CommandLineRunner init(AccountRepository accountRepository,
+//                           BookmarkRepository bookmarkRepository) {
+//        return evt -> Arrays.asList(
+//                "jhoeller,dsyer,pwebb,ogierke,rwinch,mfisher,mpollack,jlong".split(","))
+//                .forEach(
+//                        a -> {
+//                            Account account = accountRepository.save(new Account(a,
+//                                    "password"));
+//                            bookmarkRepository.save(new Bookmark(account,
+//                                    "http://bookmark.com/1/" + a, "A description"));
+//                            bookmarkRepository.save(new Bookmark(account,
+//                                    "http://bookmark.com/2/" + a, "A description"));
+//                        });
+//    }
 
     private void testBeans() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
@@ -91,7 +96,7 @@ public class Application implements CommandLineRunner {
         logger.info(withDependency.printText().toString());
     }
 
-    @Scheduled(fixedRate = 5000)
+    //@Scheduled(fixedRate = 5000)
     public void reportCurrentTime() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, InterruptedException {
         logger.info("The time is now {}", new Date());
         sleep(5000); // conflict with default job run - sqlite is locked
@@ -102,9 +107,9 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        testBeans();
-        testMongo();
-        testSQL();
+        //testBeans();
+        //testMongo();
+        //testSQL();
     }
 
     private void testSQL() {

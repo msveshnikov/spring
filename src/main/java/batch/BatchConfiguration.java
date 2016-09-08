@@ -9,13 +9,11 @@ import batch.lessons.services.PersonItemProcessor;
 import batch.model.Customer;
 import batch.model.Person;
 import batch.repos.CustomerRepository;
-import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -114,15 +112,15 @@ public class BatchConfiguration {
         return new JobCompletionNotificationListener(new JdbcTemplate(dataSource));
     }
 
-    @Bean
-    public Job importUserJob() {
-        return jobBuilderFactory.get("importUserJob")
-                .incrementer(new RunIdIncrementer())
-                .listener(listener())
-                .flow(step1())
-                .end()
-                .build();
-    }
+//    @Bean
+//    public Job importUserJob() {
+//        return jobBuilderFactory.get("importUserJob")
+//                .incrementer(new RunIdIncrementer())
+//                .listener(listener())
+//                .flow(step1())
+//                .end()
+//                .build();
+//    }
 
 
     private CompositeItemWriter compositeItemWriter() {

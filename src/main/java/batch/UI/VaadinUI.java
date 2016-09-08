@@ -12,6 +12,7 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 @SpringUI
 @Theme("valo")
@@ -29,30 +30,21 @@ public class VaadinUI extends UI {
 
     @Override
     protected void init(VaadinRequest request) {
-        //setContent(new Button("Click me", e -> Notification.show("Hello Spring+Vaadin user!")));
-        //setContent(grid);
-        listCustomers();
-
-        Panel panel = new Panel("My Custom Component");
-        VerticalLayout panelContent = new VerticalLayout();
-        panelContent.setMargin(true); // Very useful
-        panel.setContent(panelContent);
-
-        // Compose from multiple components
-        panelContent.addComponent(new Button("Click me", e -> Notification.show("Hello Spring+Vaadin user!")));
-        panelContent.addComponent(grid);
-
-        // Set the size as undefined at all levels
-        panelContent.setSizeUndefined();
-        panel.setSizeUndefined();
-        setSizeUndefined();
-
-        setContent(panel);
+        TextField filter = new TextField();
+        filter.setInputPrompt("Filter by job title");
+        filter.addTextChangeListener(e -> listCustomers(e.getText()));
+        VerticalLayout mainLayout = new VerticalLayout(new Button("Click me", e -> Notification.show("Hello Spring+Vaadin user!")), filter, grid);
+        setContent(mainLayout);
     }
 
-    private void listCustomers() {
-        grid.setContainerDataSource(
-                new BeanItemContainer(Person.class, repo.findAll()));
+    void listCustomers(String text) {
+        if (StringUtils.isEmpty(text)) {
+            grid.setContainerDataSource(
+                    new BeanItemContainer(Person.class, repo.findAll()));
+        } else {
+            grid.setContainerDataSource(new BeanItemContainer(Person.class,
+                    repo.findByTitleStartsWithIgnoreCase(text)));
+        }
     }
 
 }
