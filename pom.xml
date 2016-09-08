@@ -13,12 +13,20 @@
         <version>1.4.0.RELEASE</version>
     </parent>
 
+    <packaging>war</packaging>
+
     <properties>
         <java.version>1.8</java.version>
         <docker.image.prefix>springio</docker.image.prefix>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
