@@ -108,7 +108,7 @@ public class Application implements CommandLineRunner {
     }
 
     private void testSQL() {
-        personRepository.deleteAll();
+        //personRepository.deleteAll();
         personRepository.save(new Person("Me", "programmer", "333", "", ""));
         personRepository.save(new Person("Other", "QA", "333", "", ""));
         logger.info("Persons found with findAll():");

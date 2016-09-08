@@ -9,12 +9,11 @@ import javax.persistence.Id;
 
 
 @Entity
-//@Document //for Mongo
 public class Person {
+    public Boolean sex;
     @Id
     @GeneratedValue
     private long id;
-
     private String firstName;
     private String title;
     private String phone;
