@@ -4,10 +4,10 @@ import batch.lessons.LessonsConfiguration;
 import batch.lessons.services.BeanWithDependency;
 import batch.lessons.services.interfaces.GreetingService;
 import batch.model.*;
+import batch.repos.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -19,6 +19,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -43,8 +44,6 @@ public class Application implements CommandLineRunner {
 
 
     public static void main(String[] args) throws Exception {
-
-
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
         String[] beanNames = ctx.getBeanDefinitionNames();
         Arrays.sort(beanNames);
@@ -52,7 +51,22 @@ public class Application implements CommandLineRunner {
         for (String beanName : beanNames) {
             System.out.println(beanName);
         }
+    }
 
+    @Bean
+    CommandLineRunner init(AccountRepository accountRepository,
+                           BookmarkRepository bookmarkRepository) {
+        return evt -> Arrays.asList(
+                "jhoeller,dsyer,pwebb,ogierke,rwinch,mfisher,mpollack,jlong".split(","))
+                .forEach(
+                        a -> {
+                            Account account = accountRepository.save(new Account(a,
+                                    "password"));
+                            bookmarkRepository.save(new Bookmark(account,
+                                    "http://bookmark.com/1/" + a, "A description"));
+                            bookmarkRepository.save(new Bookmark(account,
+                                    "http://bookmark.com/2/" + a, "A description"));
+                        });
     }
 
     private void testBeans() {
@@ -82,8 +96,8 @@ public class Application implements CommandLineRunner {
         logger.info("The time is now {}", new Date());
         sleep(5000); // conflict with default job run - sqlite is locked
         System.out.println("Starting job");
-        jobLauncher.run(importUserJob, new JobParametersBuilder()
-                .addLong("time", System.currentTimeMillis()).toJobParameters()); //need new JobParams to start each step again
+//        jobLauncher.run(importUserJob, new JobParametersBuilder()
+//                .addLong("time", System.currentTimeMillis()).toJobParameters()); //need new JobParams to start each step again
     }
 
     @Override

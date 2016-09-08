@@ -1,5 +1,6 @@
-package batch.model;
+package batch.repos;
 
+import batch.model.Customer;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
