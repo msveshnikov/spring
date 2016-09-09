@@ -32,6 +32,7 @@ import java.util.Date;
 import static java.lang.Thread.sleep;
 
 @SpringBootApplication
+
 public class Application implements CommandLineRunner {
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
     @Autowired
