@@ -10,15 +10,15 @@ import javax.persistence.Id;
 
 @Entity
 public class Person {
-    public Boolean sex;
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String firstName;
     private String title;
     private String phone;
     private String state;
     private String county;
+    private Boolean sex;
 
     public Person() {
 
@@ -55,6 +55,22 @@ public class Person {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public Boolean getSex() {
+        return sex;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {

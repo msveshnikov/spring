@@ -37,7 +37,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.Arrays;
-import java.util.List;
 
 
 @Configuration
@@ -65,7 +64,7 @@ public class BatchConfiguration {
 
     @Bean
     public FlatFileItemReader<Person> reader() {
-        FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
+        FlatFileItemReader<Person> reader = new FlatFileItemReader<>();
         reader.setMaxItemCount(20);
         reader.setResource(new ClassPathResource("contacts.csv"));
         reader.setLineMapper(new DefaultLineMapper<Person>() {{
@@ -90,8 +89,8 @@ public class BatchConfiguration {
 
     @Bean
     public JdbcBatchItemWriter<Person> mysqlWriter() {
-        JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<Person>();
-        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Person>());
+        JdbcBatchItemWriter<Person> writer = new JdbcBatchItemWriter<>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
         writer.setSql("INSERT INTO people (title, firstname, phone, state, county) VALUES (:title, :firstName, :phone, :state, :county);");
         writer.setDataSource(dataSource);
         return writer;
@@ -99,12 +98,9 @@ public class BatchConfiguration {
 
     @Bean
     public ItemWriter<Person> mongoWriter() {
-        return new ItemWriter<Person>() {
-            @Override
-            public void write(List<? extends Person> list) throws Exception {
-                for (Person p : list) {
-                    customerRepository.save(new Customer(p.getFirstName(), p.getTitle()));
-                }
+        return list -> {
+            for (Person p : list) {
+                customerRepository.save(new Customer(p.getFirstName(), p.getTitle()));
             }
         };
     }

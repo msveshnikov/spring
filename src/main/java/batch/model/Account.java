@@ -16,8 +16,8 @@ import java.util.Set;
 public class Account {
 
     @JsonIgnore
-    public String password;
-    public String username;
+    private String password;
+    private String username;
     @OneToMany(mappedBy = "account")
     private Set<Bookmark> bookmarks = new HashSet<>();
     @Id
