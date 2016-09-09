@@ -11,6 +11,8 @@ import batch.repos.OrderRepository;
 import batch.repos.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -40,8 +42,8 @@ public class Application implements CommandLineRunner {
     private CustomerRepository customerRepository;
     @Autowired
     private PersonRepository personRepository;
-//    @Autowired
-//    private Job importUserJob;
+    @Autowired
+    private Job importUserJob;
 
 
     public static void main(String[] args) throws Exception {
@@ -101,15 +103,15 @@ public class Application implements CommandLineRunner {
         logger.info("The time is now {}", new Date());
         sleep(5000); // conflict with default job run - sqlite is locked
         System.out.println("Starting job");
-//        jobLauncher.run(importUserJob, new JobParametersBuilder()
-//                .addLong("time", System.currentTimeMillis()).toJobParameters()); //need new JobParams to start each step again
+        jobLauncher.run(importUserJob, new JobParametersBuilder()
+                .addLong("time", System.currentTimeMillis()).toJobParameters()); //need new JobParams to start each step again
     }
 
     @Override
     public void run(String... args) throws Exception {
-        //testBeans();
-        //testMongo();
-        //testSQL();
+        testBeans();
+        testMongo();
+        testSQL();
     }
 
     private void testSQL() {
